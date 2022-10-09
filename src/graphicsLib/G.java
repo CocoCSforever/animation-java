@@ -1,8 +1,7 @@
 package graphicsLib;
 
 //import java.awt.*;
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.util.Random;
 
 public class G {
@@ -14,6 +13,17 @@ public class G {
     public static int rnd(int max){return RND.nextInt(max);}
     //helper function: create color in full range
     public static Color rndColor(){return new Color(rnd(256),rnd(256),rnd(256));}
+
+    public static Polygon poly = new Polygon();
+
+    public static void pSpline(int xa,int ya,int xb,int yb,int xc,int yc,int n){
+        if(n==0){poly.addPoint(xa,ya);poly.addPoint(xc,yc);return;}
+        int xab = (xa+xb)/2, yab=(ya+yb)/2,xbc=(xb+xc)/2,ybc=(yb+yc)/2;
+        int xabc= (xab+xbc)/2,yabc=(yab+ybc)/2;
+        pSpline(xa,ya,xab,yab,xabc,yabc,n-1);
+        pSpline(xabc,yabc,xbc,ybc,xc,yc,n-1);
+    }
+
 
     //we can change the following function:
     //public static void fillBackground(Graphics g,Color c){g.setColor(c);g.fillRect(0,0,3000,3000);}
@@ -38,6 +48,8 @@ public class G {
         public int hiy(){return loc.y+size.y;}
         public int midy(){return (loc.y+loc.y+size.y)/2;}
     }
+
+
 
     public static class LoHi{}
 

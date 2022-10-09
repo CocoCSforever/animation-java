@@ -12,13 +12,13 @@ import java.util.ArrayList;
 
 import javax.swing.*;//for Timer
 
-public class Squares extends Window{
+public class Squares extends Window implements ActionListener{
     static G.VS daVS=new G.VS(100,100,200,300);
     static Color daColor=G.rndColor();
     public static Square.List daList =new Square.List();
     public static Square daSquare;
 
-    public boolean dragging =false;
+    //public boolean dragging =false;
     public static G.V mouseDelta=new G.V(0,0);
     public static G.V pressedLoc=new G.V(0,0);
 
@@ -42,7 +42,6 @@ public class Squares extends Window{
         timer.setInitialDelay(2000);
         timer.start();
     }
-
     /*protected void paintComponent(Graphics g){
         //G.fillBackground(g,Color.WHITE);
         //daVS.fill(g,daColor);
@@ -51,7 +50,7 @@ public class Squares extends Window{
 
     public static class Square extends G.VS implements I.Area{
         public Color c=G.rndColor();
-        // random velocity between -10 and 10 in both x and y
+        //random velocity between -10 and 10 in both x and y
         //public G.V dv=new G.V(G.rnd(20)-10,G.rnd(20)-10);
         public G.V dv=new G.V(0,0);//stop the motion
 
@@ -98,7 +97,18 @@ public class Squares extends Window{
     }
     public void actionPerformed(ActionEvent ae){repaint();}
     // and paint component is now trivial
-    public void paintComponent(Graphics g){daList.draw(g);}
+    public void paintComponent(Graphics g){
+        daList.draw(g);
+        if(daList.size()>=4) {// we will treat the 3 squares as handles for the spline
+            G.poly.reset();
+            int xa = daList.get(1).loc.x, ya = daList.get(1).loc.y;
+            int xb = daList.get(2).loc.x, yb = daList.get(2).loc.y;
+            int xc = daList.get(3).loc.x, yc = daList.get(3).loc.y;
+            G.pSpline(xa, ya, xb, yb, xc, yc, 4);
+            g.setColor(Color.BLACK);
+            g.fillPolygon(G.poly);
+        }
+    }
     /*@Override
     public void mousePressed(MouseEvent me){
         //if(daVS.hit(me.getX(),me.getY())){daColor=G.rndColor();}
